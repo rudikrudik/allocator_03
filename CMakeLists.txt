@@ -4,7 +4,7 @@ project(allocator)
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 
-configure_file(src/version.h.in src/version.h)
+configure_file(version.h.in src/version.h)
 
 project(allocator VERSION ${PROJECT_VERSION})
 
