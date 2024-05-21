@@ -6,7 +6,10 @@ public:
     typedef T value_type;
     static signed int position;
     static constexpr int size = sizeof(T) * S;
-    static uint8_t data[size];
+    void* data = ::operator new(size);
+    //char (*pchar)[10] = new char[dim][10];
+    //void* data = ::operator new(size);
+    //static uint8_t data[size];
 
     CustomPoolAllocator() noexcept = default;
     ~CustomPoolAllocator() = default;
@@ -59,8 +62,8 @@ constexpr bool CustomPoolAllocator<T, S>::operator!=(const CustomPoolAllocator<T
     return false;
 }
 
-template <class T, signed int S>
-uint8_t CustomPoolAllocator<T, S>::data[size];
+//template <class T, signed int S>
+//uint8_t CustomPoolAllocator<T, S>::data = new uint8_t (sizeof(T) * S);
 
 template <class T, signed int S>
 int CustomPoolAllocator<T, S>::position = 0;

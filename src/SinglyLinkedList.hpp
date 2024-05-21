@@ -86,15 +86,18 @@ int SinglyLinkedList<T, Allocator>::size() const {return s_size;}
 
 template <typename T, class Allocator>
 void SinglyLinkedList<T, Allocator>::push_back(T data) {
+    Allocator _alloc;
+    Node *node = reinterpret_cast<Node*>(_alloc.allocate(1));
+
     if(head == nullptr){
-        head = new Node(data);
+        head = new(node) Node(data);
     }
     else{
         Node *current = this->head;
         while(current->pNext != nullptr){
             current = current->pNext;
         }
-        current->pNext = new Node(data);
+        current->pNext = new(node) Node(data);
     }
     s_size++;
 }
