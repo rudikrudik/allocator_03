@@ -1,7 +1,7 @@
 #include <iostream>
-#include "src/factorial.h"
-#include "src/CustomAllocator.hpp"
-#include "src/SinglyLinkedList.hpp"
+#include "factorial.h"
+#include "CustomAllocator.hpp"
+#include "SinglyLinkedList.hpp"
 #include <map>
 
 const int size = 10;

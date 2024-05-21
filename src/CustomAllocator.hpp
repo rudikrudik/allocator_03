@@ -43,12 +43,12 @@ T* CustomPoolAllocator<T, S>::allocate(std::size_t n) {
         throw std::bad_alloc();
 
     int current = position;
-    position += n;
+    position += static_cast<int>(n);
     return reinterpret_cast<T*>(data) + current;
 }
 
 template<class T, signed S>
-void CustomPoolAllocator<T, S>::deallocate(T* p, std::size_t n){}
+[[maybe_unused]] void CustomPoolAllocator<T, S>::deallocate(T*, std::size_t){}
 
 template<class T, signed int S>
 template<class TA, signed int UA>
@@ -61,9 +61,6 @@ template<class TA, signed int UA>
 constexpr bool CustomPoolAllocator<T, S>::operator!=(const CustomPoolAllocator<TA, UA> &a) noexcept {
     return false;
 }
-
-//template <class T, signed int S>
-//uint8_t CustomPoolAllocator<T, S>::data = new uint8_t (sizeof(T) * S);
 
 template <class T, signed int S>
 int CustomPoolAllocator<T, S>::position = 0;
