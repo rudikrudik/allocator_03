@@ -1,12 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 project(allocator)
 
-set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
-set(PROJECT_VERSION 0.0.${PATCH_VERSION})
+#set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
+#set(PROJECT_VERSION 0.0.$ENV{GITHUB_RUN_NUMBER})
 
-configure_file(version.h.in src/version.h)
-
-project(allocator VERSION ${PROJECT_VERSION})
+project(allocator VERSION 0.0.$ENV{GITHUB_RUN_NUMBER})
 
 set(CMAKE_CXX_STANDARD 17)
 
