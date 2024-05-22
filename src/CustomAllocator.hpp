@@ -7,9 +7,6 @@ public:
     static signed int position;
     static constexpr int size = sizeof(T) * S;
     void* data = ::operator new(size);
-    //char (*pchar)[10] = new char[dim][10];
-    //void* data = ::operator new(size);
-    //static uint8_t data[size];
 
     CustomPoolAllocator() noexcept = default;
     ~CustomPoolAllocator() = default;
