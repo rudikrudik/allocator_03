@@ -5,7 +5,7 @@ class SinglyLinkedList{
 public:
     SinglyLinkedList();
     SinglyLinkedList(const SinglyLinkedList<T, Allocator> &other);
-    ~SinglyLinkedList();
+    ~SinglyLinkedList() = default;
 
     int size() const;
     void push_back(T data);
@@ -31,7 +31,7 @@ private:
 
     int s_size;
     Node *head;
-
+    Allocator allocator;
 
 public:
     class Iterator {
@@ -72,22 +72,12 @@ SinglyLinkedList<T, Allocator>::SinglyLinkedList(const SinglyLinkedList<T, Alloc
 }
 
 template <typename T, class Allocator>
-SinglyLinkedList<T, Allocator>::~SinglyLinkedList<T, Allocator>(){
-    while(s_size){
-        Node *temp = head;
-        head = head->pNext;
-        delete temp;
-        s_size--;
-    }
-}
-
-template <typename T, class Allocator>
 int SinglyLinkedList<T, Allocator>::size() const {return s_size;}
 
 template <typename T, class Allocator>
 void SinglyLinkedList<T, Allocator>::push_back(T data) {
-    Allocator _alloc;
-    Node *node = reinterpret_cast<Node*>(_alloc.allocate(1));
+    typename Allocator::template rebind<Node>::other nodeAlloc;
+    Node *node = nodeAlloc.allocate(1);
 
     if(head == nullptr){
         head = new(node) Node(data);

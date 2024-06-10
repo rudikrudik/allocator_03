@@ -1,4 +1,4 @@
-#include "factorial.h"
+#pragma once
 
 int factorialCalc(int number){
     int result = 1;

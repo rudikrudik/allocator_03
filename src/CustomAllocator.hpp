@@ -1,65 +1,58 @@
 #pragma once
 
-#include <array>
-
-template<class T, signed S>
-class CustomPoolAllocator {
-public:
+template <class T, signed int S>
+struct CustomPoolAllocator {
     typedef T value_type;
-    static constexpr int size = sizeof(T) * S;
 
-    CustomPoolAllocator() : memory_block(0) {};
+    static int pos;
+    static constexpr int size = sizeof(T) * S;
+    static uint8_t data[size];
+
+    CustomPoolAllocator () = default;
     ~CustomPoolAllocator() = default;
 
-    template<class TA>
-    constexpr explicit CustomPoolAllocator(const CustomPoolAllocator<TA, S> &other) noexcept;
+    template <class U, signed int SU>
+    explicit CustomPoolAllocator (const CustomPoolAllocator<U, SU>&) noexcept {}
 
-    T* allocate (std::size_t n);
-    void deallocate (T* p, std::size_t n);
+    template <class TU, signed int SU>
+    constexpr bool operator==(const CustomPoolAllocator<TU, SU>& a2) noexcept;
 
-    template <class TA>
-    struct rebind {using other = CustomPoolAllocator<TA, S>;};
+    template <class TU, signed int SU>
+    constexpr bool operator!=(const CustomPoolAllocator<TU, SU>& a2) noexcept;
 
-    // Перегрузка операторов
-    template<class TA>
-    constexpr bool operator == (const CustomPoolAllocator<TA, S>& a) noexcept;
-    template<class TA>
-    constexpr bool operator != (const CustomPoolAllocator<TA, S>& a) noexcept;
+    T* allocate (std::size_t n) {
+        if (pos + n > size)
+            throw std::bad_alloc();
 
-private:
-    std::array<value_type, S> memory;
-    size_t memory_block = 0;
+        int cur = pos;
+        pos += n;
+        return reinterpret_cast<T*>(data) + cur;
+    }
 
+    void deallocate (T*, std::size_t) {}
+
+    template<typename U>
+    struct rebind {
+        using other = CustomPoolAllocator<U, S>;
+    };
 };
 
-// Реализация методов
-template<class T, signed S>
-template<class TA>
-constexpr CustomPoolAllocator<T,S>::CustomPoolAllocator(const CustomPoolAllocator<TA, S> &other) noexcept {}
 
-template<class T, signed S>
-T* CustomPoolAllocator<T, S>::allocate(std::size_t n) {
-    if (memory_block + n > S)
-        throw std::bad_alloc();
+template <typename T, signed int S>
+uint8_t CustomPoolAllocator<T, S>::data[size];
 
-    T* current_pointer = &memory[memory_block];
-    memory_block += n;
-    return current_pointer;
-}
+template <typename T, signed int S>
+int CustomPoolAllocator<T, S>::pos = 0;
 
-template<class T, signed S>
-void CustomPoolAllocator<T, S>::deallocate(T*, std::size_t n){
-    memory_block -= n;
-}
 
-template<class T, signed int S>
-template<class TA>
-constexpr bool CustomPoolAllocator<T, S>::operator==(const CustomPoolAllocator<TA, S> &a) noexcept {
+template<class T, int S>
+template<class TU, int SU>
+constexpr bool CustomPoolAllocator<T, S>::operator==(const CustomPoolAllocator<TU, SU> &a2) noexcept {
     return true;
 }
 
-template<class T, signed int S>
-template<class TA>
-constexpr bool CustomPoolAllocator<T, S>::operator!=(const CustomPoolAllocator<TA, S> &a) noexcept {
+template<class T, int S>
+template<class TU, int SU>
+constexpr bool CustomPoolAllocator<T, S>::operator!=(const CustomPoolAllocator<TU, SU> &a2) noexcept {
     return false;
 }

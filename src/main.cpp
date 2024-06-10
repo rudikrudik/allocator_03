@@ -1,5 +1,5 @@
 #include <iostream>
-#include "factorial.h"
+#include "factorial.hpp"
 #include "CustomAllocator.hpp"
 #include "SinglyLinkedList.hpp"
 #include <map>
@@ -41,23 +41,25 @@ int main() {
     }
 
     // Вывод SinglyLinkedList c default allocator
+    std::cout << "Default Allocator List: " << std::endl;
     for(const auto &it : singly_list){
         std::cout << it << ' ';
     }
     std::cout << std::endl;
 
     // Создание SinglyLinkedList c CustomPoolAllocator
+    std::cout << "Custom Allocator List: " << std::endl;
+
     SinglyLinkedList<int, CustomPoolAllocator<int, 10>> singly_list_custom_alloc;
     for(int i = 0; i < size; i++) {
         singly_list_custom_alloc.push_back(i);
     }
 
-    // Вывод SinglyLinkedList c default allocator
+    // Вывод SinglyLinkedList c CustomPoolAllocator
     for(const auto &it : singly_list_custom_alloc){
         std::cout << it << ' ';
     }
-    std::cout << std::endl;
 
-    std::cout << "End" << std::endl;
+    std::cout << std::endl << "End" << std::endl;
     return 0;
 }
